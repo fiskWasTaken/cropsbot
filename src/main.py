@@ -39,10 +39,7 @@ cv2.imwrite("out/last.jpg", result)
 with open("out/last.jpg") as imagefile:
     imagedata = imagefile.read()
 
-# - then upload medias one by one on Twitter's dedicated server
-#   and collect each one's id:
 t_upload = Twitter(domain='upload.twitter.com', auth=get_oauth_bundle(config['twitter']))
 
 id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
-# - finally send your tweet with the list of media ids:
 t.statuses.update(status="", media_ids=",".join([id_img]))

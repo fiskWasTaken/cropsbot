@@ -1,7 +1,7 @@
 FROM bamos/openface
 MAINTAINER fisk <myself@fiskie.me>
 
-ADD crontab /etc/cron.d/lewdcrops
+COPY crontab /etc/cron.d/lewdcrops
 
 COPY src /opt/lewdcrops
 

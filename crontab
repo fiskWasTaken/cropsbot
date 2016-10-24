@@ -1,0 +1,1 @@
+*/10 * * * * root cd /root/lewdcrops; ./main.py 2>&1

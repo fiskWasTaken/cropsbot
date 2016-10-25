@@ -13,8 +13,7 @@ config = yaml.load(open('config.yml'))
 
 
 def get_a_crop():
-    posts = e621.get_latest(tags="rating:e -swf -webm -gif order:random score:>5", limit=10)
-    # posts = [e621.get_by_id(1030454)]
+    posts = e621.get_latest(tags=config['tags'], limit=config['pool_size'])
 
     for post in posts:
         result = process_post(post)

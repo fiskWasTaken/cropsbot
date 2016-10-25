@@ -1,3 +1,4 @@
 twitter == 1.17.1
 pyyaml
 requests
+numpy

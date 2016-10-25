@@ -38,6 +38,7 @@ def process_post(post):
 
     return source[y1:y2, x1:x2]
 
+
 def find_first_face(source):
     for max_dim in range(200, 800, 40):
         # resize to max_dim

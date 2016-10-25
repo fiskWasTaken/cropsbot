@@ -7,9 +7,4 @@ COPY src /root/lewdcrops
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
 
-# cron
-COPY crontab /etc/cron.d/lewdcrops
-RUN chmod 0644 /etc/cron.d/lewdcrops
-
-RUN touch /var/log/cron.log
-CMD crontab /etc/cron.d/lewdcrops && tail -f /var/log/cron.log
+CMD cd /root/lewdcrops; ./main.py

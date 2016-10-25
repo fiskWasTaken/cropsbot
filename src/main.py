@@ -2,6 +2,7 @@
 
 from twitter import Twitter, OAuth
 from processing import process_post
+from threading import Timer
 import yaml
 import e621
 import cv2
@@ -20,26 +21,38 @@ def get_a_crop():
         if result is not None:
             return post, result
 
-
-def get_oauth_bundle(conf):
-    return OAuth(conf['access_token_key'], conf['access_token_secret'], conf['consumer_key'], conf['consumer_secret'])
+        return None, None
 
 
-post, result = get_a_crop()
+def post_to_twitter(post, result):
+    cv2.imwrite('out/%d.jpg' % int(post['id']), result)
+    cv2.imwrite("out/last.jpg", result)
 
-if result is None:
-    exit()
+    t = Twitter(auth=OAuth(**config['twitter']))
+    t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']))
 
-cv2.imwrite('out/%d.jpg' % int(post['id']), result)
+    with open("out/last.jpg") as imagefile:
+        imagedata = imagefile.read()
 
-t = Twitter(auth=get_oauth_bundle(config['twitter']))
+    id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
+    t.statuses.update(status="", media_ids=",".join([id_img]))
 
-cv2.imwrite("out/last.jpg", result)
+    print("Uploaded %d.jpg" % int(post['id']))
 
-with open("out/last.jpg") as imagefile:
-    imagedata = imagefile.read()
 
-t_upload = Twitter(domain='upload.twitter.com', auth=get_oauth_bundle(config['twitter']))
+def run():
+    try:
+        post, result = get_a_crop()
 
-id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
-t.statuses.update(status="", media_ids=",".join([id_img]))
+        if post is None:
+            print("Could not get a crop")
+        else:
+            post_to_twitter(post, result)
+    except Exception as e:
+        print(e)
+        print("Continuing run")
+
+    Timer(600, run).start()
+
+
+run()

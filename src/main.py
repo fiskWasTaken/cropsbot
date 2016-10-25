@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-from twitter import Twitter, OAuth
-from processing import process_post
 from threading import Timer
-import yaml
-import e621
-import cv2
 
+import cv2
+import yaml
+from twitter import Twitter, OAuth
+
+import e621
+from processing import process_post
 
 config = yaml.load(open('config.yml'))
 
@@ -21,7 +22,7 @@ def get_a_crop():
         if result is not None:
             return post, result
 
-        return None, None
+    return None, None
 
 
 def post_to_twitter(post, result):

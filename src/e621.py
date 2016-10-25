@@ -1,6 +1,7 @@
-import requests
 import json
 import urllib
+
+import requests
 
 base = 'https://e621.net'
 

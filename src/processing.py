@@ -39,7 +39,7 @@ def process_post(post):
     return source[y1:y2, x1:x2]
 
 def find_first_face(source):
-    for max_dim in range(100, 800, 40):
+    for max_dim in range(200, 800, 40):
         # resize to max_dim
         if source.shape[1] > source.shape[0]:
             dsize = (max_dim, int(source.shape[0] * (max_dim / float(source.shape[1]))))

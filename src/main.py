@@ -53,7 +53,7 @@ def run():
         print(e)
         print("Continuing run")
 
-    Timer(420, run).start()
+    Timer(config['interval'], run).start()
 
 
 run()

@@ -6,7 +6,7 @@ import numpy as np
 
 
 config = yaml.load(open('config.yml'))
-align = openface.AlignDlib(config['options']['dlib_face_predictor'])
+align = openface.AlignDlib(config['dlib_face_predictor'])
 
 
 def process_post(post):

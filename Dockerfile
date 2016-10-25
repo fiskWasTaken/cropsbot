@@ -12,4 +12,4 @@ COPY crontab /etc/cron.d/lewdcrops
 RUN chmod 0644 /etc/cron.d/lewdcrops
 
 RUN touch /var/log/cron.log
-CMD cron && tail -f /var/log/cron.log
+CMD crontab /etc/cron.d/lewdcrops && tail -f /var/log/cron.log

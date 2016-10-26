@@ -1,0 +1,1 @@
+docker run -d -v $(pwd)/src:/root/cropsbot -t fisk:cropsbot bash -c "cd /root/cropsbot; ./main.py"

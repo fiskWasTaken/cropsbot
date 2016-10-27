@@ -47,8 +47,6 @@ def find_first_face(source):
         else:
             dsize = (int(source.shape[1] * (max_dim / float(source.shape[0]))), max_dim)
 
-        print("Sampling at (%d, %d)... " % (dsize[0], dsize[1]))
-
         img = cv2.resize(source, dsize)
         img = cv2.copyMakeBorder(img, 0, max_dim - img.shape[0], 0, max_dim - img.shape[1], cv2.BORDER_CONSTANT)
 
@@ -59,7 +57,7 @@ def find_first_face(source):
             # print("Could not find a face bounding box")
             continue
 
-        print("Match found (%s)" % bb)
+        print("Match found (%s) at same size (%d, %d)... " % (bb, dsize[0], dsize[1]))
 
         return bb, max_dim
 

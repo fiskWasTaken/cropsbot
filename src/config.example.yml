@@ -1,0 +1,18 @@
+# the dlib face predictor to use (stored in image)
+dlib_face_predictor: "/root/openface/models/dlib/shape_predictor_68_face_landmarks.dat"
+
+# e621 tags to use
+tags: "rating:e -swf -webm -gif order:random score:>2"
+
+# scan interval
+interval: 900
+
+# pool size (how many images to try in a scan before giving up)
+pool_size: 10
+
+# twitter api creds
+twitter:
+  consumer_key: ""
+  consumer_secret: ""
+  token: ""
+  token_secret: ""

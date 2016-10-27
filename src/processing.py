@@ -57,7 +57,7 @@ def find_first_face(source):
             # print("Could not find a face bounding box")
             continue
 
-        print("Match found (%s) at same size (%d, %d)... " % (bb, dsize[0], dsize[1]))
+        print("Match found (%s) at sample size (%d, %d)... " % (bb, dsize[0], dsize[1]))
 
         return bb, max_dim
 

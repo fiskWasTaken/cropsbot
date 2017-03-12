@@ -25,32 +25,55 @@ def get_a_crop():
     return None, None
 
 
+def get_media_twitter():
+    return Twitter(auth=OAuth(**config['twitter']['media']))
+
+
+def get_meta_twitter():
+    return Twitter(auth=OAuth(**config['twitter']['meta']))
+
+
+def get_artist_name(post):
+    """
+    gets a nicely formatted artist name for the post
+    """
+    if len(post['artist']) == 0:
+        return "unknown artist"
+
+    return post['artist'][0].replace("_(artist)", "")
+
+
+def get_tags_string(post, length=3):
+    """
+    splits the tags string into an actual array, shuffles it and picks the first few
+    """
+    tags = map(lambda tag: '#' + tag, post['tags'].split(' '))
+    tags = random.shuffle(tags)
+    return " ".join(tags[:length])
+
+
 def post_to_twitter(post, result):
     cv2.imwrite('out/%d.jpg' % int(post['id']), result)
     cv2.imwrite("out/last.jpg", result)
 
-    with Twitter(auth=OAuth(**config['twitter']['media'])) as t:
-        t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']['media']))
+    t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']['media']))
 
-        with open("out/last.jpg") as imagefile:
-            imagedata = imagefile.read()
+    with open("out/last.jpg") as imagefile:
+        imagedata = imagefile.read()
 
-        id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
-        media_tweet = t.statuses.update(status="", media_ids=",".join([id_img]))
+    id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
+    media_tweet = get_media_twitter().statuses.update(status="", media_ids=",".join([id_img]))
 
-        print("Posted %d.jpg" % int(post['id']))
+    print("Posted %d.jpg" % int(post['id']))
 
-    with Twitter(auth=OAuth(**config['twitter']['meta'])) as t:
-        artist_name = post['artist'].get(0, "unknown artist").replace("_(artist)", "")
+    artist_name = get_artist_name(post)
+    tags_string = get_tags_string(post)
 
-        # splits the tags string into an actual array, shuffles it and picks the first few
-        tags = map(lambda tag: '#' + tag, post['tags'].split(' '))
-        tags = random.shuffle(tags)
-        tags_string = " ".join(tags[:3])
+    status = "https://e621.net/post/show/%d (%s) [%s]" % (post['id'], artist_name, tags_string)
 
-        status = "https://e621.net/post/show/%d (%s) [%s]" % (post['id'], artist_name, tags_string)
+    get_meta_twitter().statuses.update(status=status, in_reply_to_status_id=media_tweet['id'])
 
-        t.statuses.update(status=status, in_reply_to_status_id=media_tweet['id'])
+    print("Posted metadata")
 
 
 def run():

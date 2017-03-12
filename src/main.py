@@ -69,7 +69,7 @@ def post_to_twitter(post, result):
     artist_name = get_artist_name(post)
     tags_string = get_tags_string(post)
 
-    status = "https://e621.net/post/show/%d (%s) [%s]" % (post['id'], artist_name, tags_string)
+    status = "@cropsbot https://e621.net/post/show/%d (%s) %s" % (post['id'], artist_name, tags_string)
 
     get_meta_twitter().statuses.update(status=status, in_reply_to_status_id=media_tweet['id'])
 

@@ -12,7 +12,15 @@ pool_size: 10
 
 # twitter api creds
 twitter:
-  consumer_key: ""
-  consumer_secret: ""
-  token: ""
-  token_secret: ""
+  # image posting account
+  image:
+    consumer_key: ""
+    consumer_secret: ""
+    token: ""
+    token_secret: ""
+  # additional info
+  meta:
+    consumer_key: ""
+    consumer_secret: ""
+    token: ""
+    token_secret: ""

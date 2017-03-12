@@ -4,6 +4,7 @@ from threading import Timer
 
 import cv2
 import yaml
+import random
 from twitter import Twitter, OAuth
 
 import e621
@@ -28,16 +29,28 @@ def post_to_twitter(post, result):
     cv2.imwrite('out/%d.jpg' % int(post['id']), result)
     cv2.imwrite("out/last.jpg", result)
 
-    t = Twitter(auth=OAuth(**config['twitter']))
-    t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']))
+    with Twitter(auth=OAuth(**config['twitter']['image'])) as t:
+        t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']['image']))
 
-    with open("out/last.jpg") as imagefile:
-        imagedata = imagefile.read()
+        with open("out/last.jpg") as imagefile:
+            imagedata = imagefile.read()
 
-    id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
-    t.statuses.update(status="", media_ids=",".join([id_img]))
+        id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
+        t.statuses.update(status="", media_ids=",".join([id_img]))
 
-    print("Uploaded %d.jpg" % int(post['id']))
+        print("Uploaded %d.jpg" % int(post['id']))
+
+    with Twitter(auth=OAuth(**config['twitter']['meta'])) as t:
+        artist_name = post['artist'].get(0, "unknown artist").replace("_(artist)", "")
+
+        # splits the tags string into an actual array, shuffles it and picks the first few
+        tags = map(lambda tag: '#' + tag, post['tags'].split(' '))
+        tags = random.shuffle(tags)
+        tags_string = " ".join(tags[:3])
+
+        status = "https://e621.net/post/show/%d (%s) [%s]" % (post['id'], artist_name, tags_string)
+
+        t.statuses.update(status=status)
 
 
 def run():

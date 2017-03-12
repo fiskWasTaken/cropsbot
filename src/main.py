@@ -2,18 +2,17 @@
 
 from threading import Timer
 
-import cv2
 import yaml
 import random
 from twitter import Twitter, OAuth
 
 import e621
-from processing import process_post
 
 config = yaml.load(open('config.yml'))
 
 
 def get_a_crop():
+    from processing import process_post
     posts = e621.get_latest(tags=config['tags'], limit=config['pool_size'])
 
     for post in posts:
@@ -47,12 +46,13 @@ def get_tags_string(post, length=3):
     """
     splits the tags string into an actual array, shuffles it and picks the first few
     """
-    tags = map(lambda tag: '#' + tag, post['tags'].split(' '))
-    tags = random.shuffle(tags)
+    tags = list(map(lambda tag: '#' + tag, post['tags'].split(' ')))
+    random.shuffle(tags)
     return " ".join(tags[:length])
 
 
 def post_to_twitter(post, result):
+    import cv2
     cv2.imwrite('out/%d.jpg' % int(post['id']), result)
     cv2.imwrite("out/last.jpg", result)
 

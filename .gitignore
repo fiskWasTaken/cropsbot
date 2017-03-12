@@ -2,3 +2,6 @@ shape_predictor_68_face_landmarks.dat*
 *.pyc
 *.jpg
 config.yml
+.cache/v/cache
+src/.cache/v/cache
+src/test/.cache/v/cache

@@ -46,7 +46,7 @@ def get_tags_string(post, length=3):
     """
     splits the tags string into an actual array, shuffles it and picks the first few
     """
-    tags = list(map(lambda tag: '#' + tag, post['tags'].split(' ')))
+    tags = list(map(lambda tag: '#' + tag.replace('-', '_'), post['tags'].split(' ')))
     random.shuffle(tags)
     return " ".join(tags[:length])
 

@@ -29,16 +29,16 @@ def post_to_twitter(post, result):
     cv2.imwrite('out/%d.jpg' % int(post['id']), result)
     cv2.imwrite("out/last.jpg", result)
 
-    with Twitter(auth=OAuth(**config['twitter']['image'])) as t:
-        t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']['image']))
+    with Twitter(auth=OAuth(**config['twitter']['media'])) as t:
+        t_upload = Twitter(domain='upload.twitter.com', auth=OAuth(**config['twitter']['media']))
 
         with open("out/last.jpg") as imagefile:
             imagedata = imagefile.read()
 
         id_img = t_upload.media.upload(media=imagedata)["media_id_string"]
-        t.statuses.update(status="", media_ids=",".join([id_img]))
+        media_tweet = t.statuses.update(status="", media_ids=",".join([id_img]))
 
-        print("Uploaded %d.jpg" % int(post['id']))
+        print("Posted %d.jpg" % int(post['id']))
 
     with Twitter(auth=OAuth(**config['twitter']['meta'])) as t:
         artist_name = post['artist'].get(0, "unknown artist").replace("_(artist)", "")
@@ -50,7 +50,7 @@ def post_to_twitter(post, result):
 
         status = "https://e621.net/post/show/%d (%s) [%s]" % (post['id'], artist_name, tags_string)
 
-        t.statuses.update(status=status)
+        t.statuses.update(status=status, in_reply_to_status_id=media_tweet['id'])
 
 
 def run():

@@ -13,7 +13,7 @@ pool_size: 10
 # twitter api creds
 twitter:
   # image posting account
-  image:
+  media:
     consumer_key: ""
     consumer_secret: ""
     token: ""

@@ -4,6 +4,7 @@ from threading import Timer
 
 import yaml
 import random
+import re
 from twitter import Twitter, OAuth
 
 import e621
@@ -42,11 +43,18 @@ def get_artist_name(post):
     return post['artist'][0].replace("_(artist)", "")
 
 
+def replace_chars(tag):
+    return tag.replace('-', '_') \
+        .replace('(', '_')\
+        .replace(')', '_')
+
+
 def get_tags_string(post, length=3):
     """
     splits the tags string into an actual array, shuffles it and picks the first few
     """
-    tags = list(map(lambda tag: '#' + tag.replace('-', '_'), post['tags'].split(' ')))
+
+    tags = list(map(lambda tag: '#' + replace_chars(tag), post['tags'].split(' ')))
     random.shuffle(tags)
     return " ".join(tags[:length])
 
@@ -69,9 +77,10 @@ def post_to_twitter(post, result):
     artist_name = get_artist_name(post)
     tags_string = get_tags_string(post)
 
-    status = "@cropsbot https://e621.net/post/show/%d (%s) %s" % (post['id'], artist_name, tags_string)
+    template = "https://twitter.com/cropsbot/status/%d https://e621.net/post/show/%d (%s) %s"
+    status = template % (media_tweet['id'],post['id'], artist_name, tags_string)
 
-    get_meta_twitter().statuses.update(status=status, in_reply_to_status_id=media_tweet['id'])
+    get_meta_twitter().statuses.update(status=status)
 
     print("Posted metadata")
 

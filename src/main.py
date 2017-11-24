@@ -13,8 +13,12 @@ config = yaml.load(open('config.yml'))
 
 
 def get_a_crop():
-    from processing import process_post
     posts = e621.get_latest(tags=config['tags'], limit=config['pool_size'])
+    return process_posts(posts)
+
+
+def process_posts(posts):
+    from processing import process_post
 
     for post in posts:
         result = process_post(post)

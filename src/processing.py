@@ -31,10 +31,10 @@ def process_post(post):
 
     ratio = max(source.shape[0], source.shape[1]) / float(found_size)
 
-    x1 = bb.left() * ratio
-    y1 = bb.top() * ratio
-    x2 = bb.right() * ratio
-    y2 = bb.bottom() * ratio
+    x1 = int(bb.left() * ratio)
+    y1 = int(bb.top() * ratio)
+    x2 = int(bb.right() * ratio)
+    y2 = int(bb.bottom() * ratio)
 
     return source[y1:y2, x1:x2]
 
